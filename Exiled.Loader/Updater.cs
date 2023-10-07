@@ -112,7 +112,6 @@ namespace Exiled.Loader
         /// </summary>
         internal void CheckUpdate()
         {
-            Log.Error(Folder);
             using HttpClient client = CreateHttpClient();
             if (Busy = FindUpdate(client, !File.Exists(Path.Combine(Paths.Dependencies, "Exiled.API.dll")), out NewVersion newVersion))
                 Update(client, newVersion);
@@ -220,7 +219,7 @@ namespace Exiled.Loader
                 installerProcess.OutputDataReceived += (s, args) =>
                 {
                     if (!string.IsNullOrEmpty(args.Data))
-                        Log.Info($"[Installer] {args.Data}");
+                        Log.Debug($"[Installer] {args.Data}");
                 };
                 installerProcess.BeginOutputReadLine();
 
@@ -237,7 +236,7 @@ namespace Exiled.Loader
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    Log.Info("Auto-update complete, round will be restarted the next round!");
+                    Log.Info("Auto-update complete, server will be restarted the next round!");
                     ServerLogs.AddLog(ServerLogs.Modules.Administrative, "EXILED scheduled server restart after the round end.", ServerLogs.ServerLogType.RemoteAdminActivity_GameChanging, false);
                     ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
                     ServerConsole.AddOutputEntry(default(ExitActionRestartEntry));
